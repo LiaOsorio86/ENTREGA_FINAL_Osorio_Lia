@@ -32,5 +32,8 @@ USUARIO ADMIN
 NOMBRE admin
 CONTRASEÑA admin12349876
 
+ENLACE AL VIDEO EXPLICATIVO
+https://drive.google.com/file/d/10E1BezO8YarnPvg7g_jlbVToeboxwKjF/view?usp=sharing
+
 
 MUCHAS GRACIAS!
