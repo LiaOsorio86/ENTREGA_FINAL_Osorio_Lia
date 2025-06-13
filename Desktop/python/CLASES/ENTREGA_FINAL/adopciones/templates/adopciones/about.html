@@ -1,0 +1,109 @@
+{% extends "adopciones/index.html" %}
+{% load static %}
+
+
+
+{% block content %}
+  <section class="about_section layout_padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="img-box">
+            <img src="{% static 'images/about-img.jpg' %}" alt="" />
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="detail-box">
+            <div class="heading_container">
+              <h2>
+                Sobre Nosotros
+                <hr>
+              </h2>
+            </div>
+            <p>
+              En Patitas, somos un equipo de voluntarios unidos por la pasión y el compromiso con el bienestar animal. 
+              Contamos con veterinarios, hogares de tránsito, colaboradores administrativos, donantes y muchos 
+              corazones solidarios que hacen posible cada rescate. ¡Conocenos y sumate!
+            </p>
+
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end about section -->
+
+  <!-- wedo section -->
+
+  <section class="wedo_section layout_padding-bottom">
+    <div class="container">
+      <div class="heading_container heading_center">
+        <h2>
+          <hr>
+          ¿Que hacemos?
+          <hr>
+        </h2>
+        <p>
+            Fomentamos el cuidado integral de las mascotas de diversas maneras. 
+            Trabajamos para darles una nueva oportunidad a través de la adopción, 
+            y ofrecemos servicios de guarderia y entrenamiento para darles una mejor calidad de vida.
+        </p>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="box">
+            <div class="img-box">
+              <img src="{% static 'images/s1.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h6>
+                Adopciones
+              </h6>
+              <p>
+                Rescatamos perros y gatos que han sido abandonados o maltratados, 
+                en el ambito de la Ciudad Autónoma de Buenos Aires.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="box">
+            <div class="img-box">
+              <img src="{% static 'images/s2.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h6>
+                Cuidados
+              </h6>
+              <p>
+                Ofrecemos servicios de guarderia. Cuando no puedas cuidar a tus amigos, ahí estamos!.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="box">
+            <div class="img-box">
+              <img src="{% static 'images/s3.png' %}" alt="">
+            </div>
+            <div class="detail-box">
+              <h6>
+                Adiestramiento
+              </h6>
+              <p>
+                Si tu compañero tiene problemas de conducta, o alguna situación te preocupa, 
+                podes solicitar asesoramiento con nuestros adiestradores caninos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end wedo section -->
+
+  {% endblock %}
+

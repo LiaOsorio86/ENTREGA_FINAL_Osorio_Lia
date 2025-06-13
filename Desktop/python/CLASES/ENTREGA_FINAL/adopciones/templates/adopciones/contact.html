@@ -1,0 +1,52 @@
+{% extends "adopciones/index.html" %}
+{% load static %}
+
+
+
+{% block content %}
+  <!-- contact section -->
+
+  <section class="contact_section layout_padding">
+    <div class="container ">
+      <div class="heading_container ">
+        <h2 class="">
+          Envianos tu mensaje!.
+          
+          <hr>
+        </h2>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 ">
+          <form action="#">
+            <div>
+              <input type="text" placeholder="Nombre" />
+            </div>
+            <div>
+              <input type="email" placeholder="Email" />
+            </div>
+            <div>
+              <input type="text" class="message-box" placeholder="Mensaje" />
+            </div>
+            <div class="btn-box">
+              <button>
+                ENVIAR
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-6">
+          <div class="map_container">
+            <div class="map">
+              <div id="googleMap"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end contact section -->
+
+  {% endblock %}

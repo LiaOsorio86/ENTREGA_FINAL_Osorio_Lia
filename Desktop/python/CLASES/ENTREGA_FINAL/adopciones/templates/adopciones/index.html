@@ -1,0 +1,458 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>Patitas</title>
+
+  <!-- font awesome style -->
+  <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+  <!-- lightbox -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" rel="stylesheet" />
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,700|Poppins:400,700|Roboto:400,700&display=swap" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
+
+<style>
+  .navbar {
+    min-height: 60px;
+  }
+
+  .navbar-nav {
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-nav .nav-item {
+    margin-left: 5px;
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar .nav-link,
+  .navbar .btn-link {
+    font-size: 13px;
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .navbar .btn-link:hover {
+    text-decoration: none;
+  }
+
+  .navbar img.avatar-img {
+    height: 36px;
+    width: 36px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+
+  form.logout-form {
+    margin: 0;
+  }
+
+/* Para alinear y separar el botón de logout */
+.logout-form {
+  margin: 0 5px;
+  display: flex;
+  align-items: center;
+}
+
+.logout-form .btn-link {
+  padding: 6px 8px;
+  margin-left: 5px;
+}
+
+</style>
+
+
+</head>
+
+<body>
+  {% if messages %}
+  <div>
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+  <div class="hero_area">
+    <!-- header section starts -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container">
+          <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
+            <img src="{% static 'images/logo.png' %}" alt="" />
+            <span>
+              Patitas
+            </span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">            
+              {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                  <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'index' %}">
+                    {% if user.avatar %}
+                      <img src="{{ user.avatar.url }}" alt="Avatar" style="height: 40px; width: 40px; object-fit: cover; border-radius: 50%; margin-right: 5px;">
+                    {% else %}
+                      <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" style="height: 40px; width: 40px; object-fit: cover; border-radius: 50%; margin-right: 5px;">
+                    {% endif %}
+                    {{ user.username }}
+                  </a>
+                </li>
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'registrar_mascota' %}">Publicar adopción</a>
+                </li>   
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'publicaciones' %}">Adopciones</a>
+                </li>
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'lista_adoptados' %}">Adoptados</a>
+                </li>    
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'usuarios_lista' %}">Usuarios</a>
+                </li>      
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'voluntarios_lista' %}">Voluntarios</a>
+                </li>
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'editar_perfil' %}">Mi Usuario</a>
+                </li> 
+                <li class="nav-item d-flex align-items-center">
+                   <form method="post" action="{% url 'logout' %}">
+                      {% csrf_token %}
+                      <button type="submit" class="nav-link btn btn-link p-0" style="display: inline; cursor: pointer;">
+                      Cerrar sesión
+                      </button>
+                  </form>
+                </li>       
+              {% else %}
+              <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'index' %}">
+                    {% if user.avatar %}
+                      <img src="{{ user.avatar.url }}" alt="Avatar" style="height: 40px; width: 40px; object-fit: cover; border-radius: 50%; margin-right: 5px;">
+                    {% else %}
+                      <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" style="height: 40px; width: 40px; object-fit: cover; border-radius: 50%; margin-right: 5px;">
+                    {% endif %}
+                    {{ user.username }}
+                  </a>
+                </li>
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'publicaciones' %}">Adopciones</a>
+                </li>
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'lista_adoptados' %}">Adoptados</a>
+                </li>
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'voluntario_crear' %}">Ser Voluntario</a>
+                </li>        
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'voluntarios_lista' %}">Lista Voluntarios</a>
+                </li>
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'editar_perfil' %}">Mi Usuario</a>
+                </li>
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link pr-lg-0" href="{% url 'contact' %}">Envia tu mensaje</a>
+                </li>
+                <li class="nav-item d-flex align-items-center">
+                   <form method="post" action="{% url 'logout' %}">
+                      {% csrf_token %}
+                      <button type="submit" class="nav-link btn btn-link p-0" style="display: inline; cursor: pointer;">
+                      Cerrar sesión
+                      </button>
+                  </form>
+                </li>                 
+              {% endif %}
+              {% else %}
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'about' %}">Nosotros</a>
+                </li>   
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'registro_usuario' %}">Registro usuario</a>
+                </li>   
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
+                </li>               
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link" href="{% url 'acerca_de_mi' %}">Alumna Lia</a>
+                </li> 
+              {% endif %}
+                </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- end header section -->
+   
+    {% block content %}
+    
+<!-- CONTENIDO DE HERENCIAS LUEGO VAN ACA-->
+<!-- slider section -->
+<section class="slider_section position-relative">
+  <div class="slider_bg_box">
+    <img src="{% static 'images/slider-bg.jpg' %}" alt="">
+  </div>
+  <div class="container">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="5000">
+      
+      <!-- Indicadores -->
+      <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+      </ol>
+
+      <!-- Slides -->
+      <div class="carousel-inner">
+
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+          <div class="row">
+            <div class="col-md-7 col-lg-6">
+              <div class="detail-box">
+                <h1>Conocé un nuevo amig@!<br></h1>
+                <p>
+                  Muchas mascotas buscan una segunda oportunidad.
+                  Cada historia es única... y todas merecen un final feliz.
+                  
+                </p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+          <div class="row">
+            <div class="col-md-7 col-lg-6">
+              <div class="detail-box">
+                <h1>Adoptá<br></h1>
+                <p> Hay perros y gatos esperando un hogar... y puede ser el tuyo ¿Por qué no?.
+                    Transformá su vida, transformá la tuya, animate!.
+                </p>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="carousel-item">
+          <div class="row">
+            <div class="col-md-7 col-lg-6">
+              <div class="detail-box">
+                <h1>Hogares de tránsito<br></h1>
+                <p>Si querés compartir tu hogar, pero no podes hacerlo de forma permanente, sumate como hogar de tránsito.</p>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="carousel-item">
+          <div class="row">
+            <div class="col-md-7 col-lg-6">
+              <div class="detail-box">
+                <h1> Voluntariado <br><span></span></h1>
+                <p> Si no podes adoptar, pero aún asi queres dejar tu huella... sumate al voluntariado!
+                    Hay mucho por hacer, te esperamos.
+                </p>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JS de Bootstrap y jQuery -->
+<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+
+     <!-- end slider section -->
+
+    {% endblock %}
+  </div>
+
+    <!-- info section -->
+  <section class="info_section">
+    <div class="container">
+      <div class="info_form">
+        <div class="row">
+          <div class="offset-lg-3 col-lg-3">
+            <h5 class="form_heading">
+              
+            </h5>
+          </div>
+          <div class="col-lg-6">
+            <form action="#">
+              
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-lg-3">
+          <div class="info_logo">
+            <div>
+              <a href="">
+                <img src="{% static 'images/logo.png' %}" alt="" />
+                <span>
+                Patitas
+                </span>
+              </a>
+            </div>
+            <p>
+            Promovemos la convivencia responsable y la protección animal.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="info_links ">
+            <h5>
+              Contacto
+            </h5>
+            <div class="info_contact">
+              <div class="contact_link_box">
+                <a href="">
+                  <i class="fa fa-map-marker" aria-hidden="true"></i>
+                  <span>
+                    Ubicación
+                  </span>
+                </a>
+                <a href="">
+                  <i class="fa fa-phone" aria-hidden="true"></i>
+                  <span>
+                    Tel +01 1234567890
+                  </span>
+                </a>
+                <a href="">
+                  <i class="fa fa-envelope" aria-hidden="true"></i>
+                  <span>
+                    patitas@gmail.com
+                  </span>
+                </a>
+              </div>
+            </div>
+            <div class="info_social">
+              <a href="">
+                <i class="fa fa-facebook" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-twitter" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-linkedin" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-instagram" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="info_insta">
+            <h5>
+              INFORMACION
+            </h5>
+            <p class="pr-0 pr-md-4 pr-md-5">
+              Trabajamos para que cada mascota encuentre un hogar y sea amada, cuidada y respetada. 
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="pl-0 pl-lg-5 pl-md-4">
+            <h5>
+              RED DE AMIGOS
+            </h5>
+            <p>
+              Agradecemos a nuestra red de apoyo! Visitá sus redes:
+              <div class="info_social">
+              <a href="">
+                <i class="fa fa-facebook" aria-hidden="true"></i>   
+              </a> amigo1
+              <a href="">
+                <i class="fa fa-facebook" aria-hidden="true"></i>
+              </a> amigo2
+
+            </p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+  <!-- end info_section -->
+
+  <!-- footer section -->
+  <footer class="footer_section">
+    <div class="container">
+      <p>
+        &copy; <span id="displayYear"></span> All Rights Reserved By
+        <a href="https://html.design/">Free Html Templates</a>
+      </p>
+    </div>
+  </footer>
+  <!-- footer section -->
+
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <!-- lightbox -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js  "></script>
+  <!-- custom js -->
+  <script src="js/custom.js"></script>
+  <!-- Google Map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+  <!-- End Google Map -->
+
+</body>
+
+</html>

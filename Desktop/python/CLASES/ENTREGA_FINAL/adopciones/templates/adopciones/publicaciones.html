@@ -1,0 +1,70 @@
+{% extends "adopciones/index.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Buscar Publicaciones</h2>
+
+    <!-- Formulario de búsqueda -->
+    <form method="get" action="{% url 'publicaciones' %}" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Buscar por nombre, tipo, raza..." value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
+
+    <!-- Resultados -->
+    {% if publicaciones %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for publicacion in publicaciones %}
+            <div class="col">
+                <div class="card h-100">
+                    
+                    {% if publicacion.mascota_publicacion.imagen %}
+                        <img src="{{ publicacion.mascota_publicacion.imagen.url }}" class="card-img-top" alt="Imagen de mascota">
+                    {% else %}
+                        <img src="{% static 'images/sin-imagen.png' %}" class="card-img-top" alt="Sin imagen">
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">{{ publicacion.titulo_publicacion }}</h5>
+                        <p class="card-text">
+                            <strong>Nombre:</strong> {{ publicacion.mascota_publicacion.nombre }}<br>
+                            <strong>Edad:</strong> {{ publicacion.mascota_publicacion.edad }}<br>
+                            <strong>Tipo:</strong> {{ publicacion.mascota_publicacion.tipo }}<br>
+                            <strong>Raza:</strong> {{ publicacion.mascota_publicacion.raza }}<br>
+                            <strong>Descripción:</strong> {{ publicacion.contenido_publicacion }}<br>
+                            <strong>Estado:</strong>
+                            {% if publicacion.mascota_publicacion.adoptada %}
+                            <span class="badge bg-secondary">Adoptado</span>
+                            {% else %}
+                            <span class="badge bg-success">En adopción</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <div>Publicado el {{ publicacion.fecha_publicacion|date:"d/m/Y H:i" }}</div>
+                        {% if user.is_superuser %}
+                            <div class="mt-2 d-flex justify-content-between">
+                                <a href="{% url 'publicacion_update' publicacion.id %}" class="btn btn-sm btn-warning">Editar</a>
+                                <a href="{% url 'publicacion_delete' publicacion.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                            </div>
+                            {% if not publicacion.mascota_publicacion.adoptada %}
+                            <form method="post" action="{% url 'registrar_adopcion' publicacion.mascota_publicacion.id %}" class="mt-2">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-success w-100">Marcar como Adoptado</button>
+                            </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center mt-4">No se encontraron publicaciones para "{{ request.GET.q }}".</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,11 @@
+{% extends "adopciones/index.html" %}
+{% block content %}
+  <div class="container">
+    <h2>Registrar adopción de {{ view.mascota.nombre }}</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-success">Confirmar Adopción</button>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "adopciones/index.html" %}
+{% load static %}
+
+{% block content %}
+<section class="contact_section layout_padding">
+  <div class="container">
+    <div class="heading_container">
+      <h2 style="font-size: 1.5rem;">
+        Publicar Mascota
+        <hr>
+      </h2>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <form method="POST" enctype="multipart/form-data" style="font-size: 0.9rem;">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <div class="btn-box">
+            <button type="submit" class="btn btn-primary btn-sm" style="font-size: 0.9rem;">
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <div class="map_container">
+          <div class="map">
+            <img src="{% static 'images/adopcion_banner.jpg' %}" alt="Imagen de adopción" class="img-fluid" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

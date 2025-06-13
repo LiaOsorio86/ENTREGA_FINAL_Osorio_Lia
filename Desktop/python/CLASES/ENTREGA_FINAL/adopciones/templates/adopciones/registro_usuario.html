@@ -1,0 +1,54 @@
+{% extends "adopciones/index.html" %}
+{% load static %}
+
+{% block content %}
+<section class="contact_section layout_padding">
+  <div class="container">
+    <div class="heading_container">
+      <h2 class="">
+        {% if form.instance.pk %}
+          Editar Usuario
+        {% else %}
+          Usuarios - Registrate
+        {% endif %}
+        <hr>
+      </h2>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <form method="post" enctype="multipart/form-data" class="contact_form">
+          {% csrf_token %}
+          {{ form.as_p }}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          <div class="btn-box mt-3">
+            <button type="submit">
+              {% if form.instance.pk %}
+                Guardar Cambios
+              {% else %}
+                Registrarse
+              {% endif %}
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <div class="map_container">
+          <div class="map">
+            <div id="googleMap"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,15 @@
+{% extends "adopciones/index.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Confirmar Eliminación</h2>
+    <p>¿Estás seguro que querés eliminar la publicación: <strong>{{ object.titulo_publicacion }}</strong>?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <a href="{% url 'publicaciones' %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+    </form>
+</div>
+{% endblock %}
+

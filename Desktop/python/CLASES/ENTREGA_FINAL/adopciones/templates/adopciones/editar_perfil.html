@@ -1,0 +1,32 @@
+{% extends "adopciones/index.html" %}
+{% load static %}
+
+{% block content %}
+<section class="contact_section layout_padding">
+  <div class="container">
+    <div class="heading_container">
+      <h2>Editar Perfil</h2>
+      <hr>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div style="font-size: 0.9rem;">
+        {{ form.as_p }}
+      </div>
+      <div class="btn-box mt-2">
+        <a href="{% url 'cambiar_password' %}" 
+           class="btn btn-secondary btn-sm me-2" 
+           style="padding: 0.25rem 0.5rem; font-size: 0.85rem;">
+          Cambiar contraseña
+        </a>
+        <button type="submit" 
+                class="btn btn-primary btn-sm" 
+                style="padding: 0.25rem 0.5rem; font-size: 0.85rem;">
+          Guardar Cambios
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

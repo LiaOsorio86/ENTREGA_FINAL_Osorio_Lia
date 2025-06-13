@@ -1,0 +1,41 @@
+{% extends "adopciones/index.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Lista de Usuarios</h2>
+  <a href="{% url 'registro_usuario' %}" class="btn btn-success mb-3">Nuevo Usuario</a>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Usuario</th>
+        <th>Email</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        {% if request.user.is_staff or request.user.is_superuser %}
+          <th>Acciones</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for usuario in usuarios %}
+        <tr>
+          <td>{{ usuario.username }}</td>
+          <td>{{ usuario.email }}</td>
+          <td>{{ usuario.first_name }}</td>
+          <td>{{ usuario.last_name }}</td>
+          {% if request.user.is_staff or request.user.is_superuser %}
+            <td>
+              <a href="{% url 'usuario_editar' usuario.pk %}" class="btn btn-primary btn-sm">Editar</a>
+              <a href="{% url 'usuario_eliminar' usuario.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+          {% endif %}
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">No hay usuarios registrados.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

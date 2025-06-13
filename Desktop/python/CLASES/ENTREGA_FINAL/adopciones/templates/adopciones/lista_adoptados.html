@@ -1,0 +1,35 @@
+{% extends "adopciones/index.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Mascotas que ya encontraron familia</h2>
+
+    {% if casos %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
+            {% for caso in casos %}
+            <div class="col">
+                <div class="card h-100">
+                    {% if caso.mascota.imagen %}
+                        <img src="{{ caso.mascota.imagen.url }}" class="card-img-top" alt="Foto de {{ caso.mascota.nombre }}" style="max-height:180px; object-fit: contain;">
+                    {% else %}
+                        <img src="{% static 'images/sin-imagen.png' %}" class="card-img-top" alt="Sin imagen" style="max-height:180px; object-fit: contain;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ caso.mascota.nombre }}</h5>
+                        <p class="card-text">
+                            <strong>Tipo:</strong> {{ caso.mascota.tipo }}<br>
+                            <strong>Raza:</strong> {{ caso.mascota.raza }}<br>
+                            <strong>Descripción:</strong> {{ caso.mascota.descripcion }}<br>
+                            <strong>Fecha de adopción:</strong> {{ caso.fecha_adopcion|date:"d/m/Y" }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center mt-4">No hay registros de adopciones aún.</p>
+    {% endif %}
+</div>
+{% endblock %}

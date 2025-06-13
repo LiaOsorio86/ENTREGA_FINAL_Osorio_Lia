@@ -1,0 +1,46 @@
+{% extends "adopciones/index.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Contactate con nuestros voluntarios</h2>
+
+    {% if user.is_superuser %}
+        <a href="{% url 'voluntario_crear' %}" class="btn btn-success mb-3">Agregar Nuevo Voluntario</a>
+    {% endif %}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Zona</th>
+                <th>Edad</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for voluntario in voluntarios %}
+            <tr>
+                <td>{{ voluntario.nombre }}</td>
+                <td>{{ voluntario.apellido }}</td>
+                <td>{{ voluntario.zona }}</td>
+                <td>{{ voluntario.edad }}</td>
+                <td>{{ voluntario.telefono }}</td>
+                <td>{{ voluntario.email }}</td>
+                <td>
+                    {% if user.is_superuser %}
+                        <a href="{% url 'voluntario_editar' voluntario.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                        <a href="{% url 'voluntario_eliminar' voluntario.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No hay voluntarios registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

@@ -1,0 +1,14 @@
+{% extends "adopciones/index.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Confirmar eliminación</h2>
+    <p>¿Estás seguro que deseas eliminar al voluntario <strong>{{ voluntario.nombre }} {{ voluntario.apellido }}</strong>?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="{% url 'voluntarios_lista' %}" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
