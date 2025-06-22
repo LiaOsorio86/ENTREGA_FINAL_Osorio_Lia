@@ -4,26 +4,51 @@
 {% block content %}
 <section class="contact_section layout_padding">
   <div class="container">
-    <div class="heading_container">
+    <div class="heading_container text-center">
       <h2>Iniciar Sesión</h2>
       <hr>
     </div>
 
-    <form method="post">
-      {% csrf_token %}
-      {% if error %}
-        <p style="color:red;">{{ error }}</p>
-      {% endif %}
-      <p>
-        <label for="username">Usuario:</label><br>
-        <input type="text" name="username" id="username" required>
-      </p>
-      <p>
-        <label for="password">Contraseña:</label><br>
-        <input type="password" name="password" id="password" required>
-      </p>
-      <button type="submit" class="btn btn-primary">Entrar</button>
-    </form>
+    <div class="row">
+      <div class="col-md-6 col-lg-5">
+        <div class="card">
+          <div class="card-body">
+            <form method="post">
+              {% csrf_token %}
+
+              <div class="mb-3">
+                <label for="username" class="form-label">Usuario:</label>
+                <input type="text" name="username" id="username" required class="form-control">
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label">Contraseña:</label>
+                <input type="password" name="password" id="password" required class="form-control">
+              </div>
+
+              <button type="submit" class="btn btn-custom w-100">Entrar</button>
+
+              <div class="mt-3 text-center">
+                <a href="{% url 'password_reset' %}" class="text-muted small">¿Olvidaste tu contraseña? #enconstruccion#</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
+
+<script>
+  setTimeout(function () {
+    const alerts = document.querySelectorAll('.alert.auto-dismiss');
+    alerts.forEach(function (alert) {
+      alert.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      alert.style.opacity = '0';
+      alert.style.transform = 'translateY(-10px)';
+      setTimeout(() => alert.remove(), 500);
+    });
+  }, 3000);
+</script>
 {% endblock %}
+

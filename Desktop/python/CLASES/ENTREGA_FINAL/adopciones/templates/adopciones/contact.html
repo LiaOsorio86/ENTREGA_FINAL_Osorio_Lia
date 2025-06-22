@@ -1,52 +1,226 @@
 {% extends "adopciones/index.html" %}
 {% load static %}
 
-
-
 {% block content %}
-  <!-- contact section -->
+<style>
+  .mensaje-padre-avatar {
+    margin-right: 15px !important;
+  }
 
-  <section class="contact_section layout_padding">
-    <div class="container ">
-      <div class="heading_container ">
-        <h2 class="">
-          Envianos tu mensaje!.
-          
-          <hr>
-        </h2>
-      </div>
+  .heading_container_blog {
+    width: 100%;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .heading_container_blog h2 {
+    font-weight: 400;
+    font-size: 2rem;
+    color: #212529;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .heading_container_blog p.lead-intro {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .heading_container_blog hr {
+    width: 60px;
+    height: 3px;
+    background-color: #198754;
+    border: none;
+    margin: 0 auto 1.5rem;
+    border-radius: 2px;
+  }
+
+  /* Paginación en gris */
+  .pagination .page-link {
+    color: #6c757d;
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    margin: 0 3px;
+    border-radius: 0.4rem;
+    transition: background-color 0.2s ease;
+  }
+
+  .pagination .page-link:hover {
+    background-color: #f0f0f0;
+    color: #495057;
+  }
+
+  .pagination .page-item.active .page-link {
+    background-color: #dee2e6;
+    border-color: #ced4da;
+    color: #212529;
+  }
+</style>
+
+<!-- NUEVO MENSAJE -->
+<section class="contact_section layout_padding">
+  <div class="container">
+    <div class="heading_container_blog">
+      <p class="lead-intro"> ¡Nos leemos aquí debajo en el BLOG! 📨</p>
+      <h2>Compartí tu opinión</h2>
     </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6 ">
-          <form action="#">
-            <div>
-              <input type="text" placeholder="Nombre" />
+
+    <div class="row mt-4">
+      <div class="col-md-8 offset-md-0">
+        <div class="card p-4 shadow-sm">
+          <div class="row g-3 align-items-center">
+            <!-- Avatar -->
+            <div class="col-md-2 text-center">
+              {% if request.user.is_authenticated and request.user.avatar %}
+                <img src="{{ request.user.avatar.url }}" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #ccc;" alt="Tu Avatar">
+              {% else %}
+                <img src="{% static 'images/default_avatar.png' %}" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #ccc;" alt="Avatar">
+              {% endif %}
             </div>
-            <div>
-              <input type="email" placeholder="Email" />
-            </div>
-            <div>
-              <input type="text" class="message-box" placeholder="Mensaje" />
-            </div>
-            <div class="btn-box">
-              <button>
-                ENVIAR
-              </button>
-            </div>
-          </form>
-        </div>
-        <div class="col-md-6">
-          <div class="map_container">
-            <div class="map">
-              <div id="googleMap"></div>
+
+            <!-- Campo de mensaje -->
+            <div class="col-md-10">
+              <form method="post" class="contact_form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="text-end mt-2">
+                  <button type="submit" class="btn btn-custom">Publicar</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- end contact section -->
+<!-- BLOG -->
+<section class="voluntarios-section mt-5" id="blog">
+  <div class="container">
+    <div class="heading_container_blog">
+      <h2>BLOG</h2>
+    </div>
 
-  {% endblock %}
+    <!-- Paginación arriba -->
+    <div class="d-flex justify-content-center mb-4">
+      <nav aria-label="Paginación del blog">
+        <ul class="pagination">
+          {% if mensajes.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ mensajes.previous_page_number }}#blog">« Anterior</a>
+            </li>
+          {% endif %}
+          {% for num in mensajes.paginator.page_range %}
+            <li class="page-item {% if mensajes.number == num %}active{% endif %}">
+              <a class="page-link" href="?page={{ num }}#blog">{{ num }}</a>
+            </li>
+          {% endfor %}
+          {% if mensajes.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ mensajes.next_page_number }}#blog">Siguiente »</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+
+    {% for msg in mensajes %}
+      <div class="card p-3 mb-3 shadow-sm" id="mensaje-{{ msg.id }}">
+        <div class="d-flex align-items-start" style="gap: 15px;">
+          {% if msg.usuario and msg.usuario.avatar %}
+            <img src="{{ msg.usuario.avatar.url }}" class="rounded-circle mensaje-padre-avatar" style="width: 50px; height: 50px; object-fit: cover;" alt="Avatar">
+          {% else %}
+            <img src="{% static 'images/default_avatar.png' %}" class="rounded-circle mensaje-padre-avatar" style="width: 50px; height: 50px; object-fit: cover;" alt="Avatar">
+          {% endif %}
+
+          <div class="flex-grow-1">
+            <div class="d-flex justify-content-between">
+              <strong>{{ msg.nombre }}</strong>
+              <small class="text-muted">{{ msg.fecha_envio|date:"d M Y, H:i" }}</small>
+            </div>
+            <p class="mb-2">{{ msg.mensaje|linebreaks }}</p>
+
+            <!-- Botón responder -->
+            <div class="text-end mt-2">
+              <button class="btn btn-secondary-custom" type="button" onclick="mostrarFormularioRespuesta({{ msg.id }})">
+                Responder
+              </button>
+            </div>
+
+            <!-- Respuestas -->
+            {% for respuesta in msg.respuestas.all %}
+              <div class="bg-light p-2 rounded mt-2" style="margin-left: 4rem;">
+                <strong>{{ respuesta.nombre }}</strong>
+                <small class="text-muted"> — {{ respuesta.fecha_envio|date:"d M Y, H:i" }}</small>
+                <p class="mb-0">{{ respuesta.mensaje|linebreaks }}</p>
+              </div>
+            {% endfor %}
+
+            <!-- Formulario de respuesta -->
+            <div id="formulario-respuesta-{{ msg.id }}" style="display: none; margin-left: 4rem;" class="mt-2">
+              <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="hidden" name="padre" value="{{ msg.id }}">
+                <button type="submit" class="btn btn-custom">Enviar respuesta</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-muted text-center">Aún no hay mensajes.</p>
+    {% endfor %}
+
+    <!-- Paginación abajo -->
+    <div class="d-flex justify-content-center mt-4">
+      <nav aria-label="Paginación del blog">
+        <ul class="pagination">
+          {% if mensajes.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ mensajes.previous_page_number }}#blog">« Anterior</a>
+            </li>
+          {% endif %}
+          {% for num in mensajes.paginator.page_range %}
+            <li class="page-item {% if mensajes.number == num %}active{% endif %}">
+              <a class="page-link" href="?page={{ num }}#blog">{{ num }}</a>
+            </li>
+          {% endfor %}
+          {% if mensajes.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ mensajes.next_page_number }}#blog">Siguiente »</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</section>
+
+<!-- Script -->
+<script>
+  function mostrarFormularioRespuesta(id) {
+    const formDiv = document.getElementById('formulario-respuesta-' + id);
+    formDiv.style.display = (formDiv.style.display === 'none') ? 'block' : 'none';
+  }
+
+  window.addEventListener('load', () => {
+    const params = new URLSearchParams(window.location.search);
+    const scrollToId = params.get('scroll_to');
+    if (scrollToId) {
+      const element = document.getElementById(scrollToId);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 200);
+      }
+    }
+  });
+</script>
+{% endblock %}

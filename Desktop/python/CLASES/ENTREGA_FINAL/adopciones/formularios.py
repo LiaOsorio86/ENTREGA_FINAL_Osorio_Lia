@@ -1,8 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import UsuarioPersonalizado, Mascota, Publicacion, RegistroVoluntarios
-from django import forms
-from .models import CasoAdoptado
+from .models import UsuarioPersonalizado, Mascota, Publicacion, RegistroVoluntarios, CasoAdoptado, MensajeContacto
 
 class RegistroUsuarioForm(UserCreationForm):
     class Meta:
@@ -16,14 +14,13 @@ class EditarUsuarioForm(UserChangeForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+            # Oculta el password      
         if 'password' in self.fields:
             del self.fields['password']
-
-# ver por crud
-# class EditarUsuarioForm(UserChangeForm):
- #   class Meta:
-  #      model = UsuarioPersonalizado
-   #     fields = ['username', 'email', 'first_name', 'last_name', 'avatar', 'edad', 'telefono']
+        if 'avatar' in self.fields:
+            # Oculta el checkbox de "Clear"
+            self.fields['avatar'].widget.clear_checkbox_label = ''
+            self.fields['avatar'].widget.template_name = 'widgets/custom_clearable_file_input.html'
 
 
 class RegistroVoluntariosForm(forms.ModelForm):
@@ -79,4 +76,29 @@ class PublicacionForm(forms.ModelForm):
 class CasoAdoptadoForm(forms.ModelForm):
     class Meta:
         model = CasoAdoptado
-        fields = ['fecha_adopcion', 'mascota']
+        fields = ['fecha_adopcion', 'adoptante_nombre', 'comentarios', 'activo']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Ocultamos el campo mascota si ya hay instancia
+        if self.instance and self.instance.mascota:
+            self.fields['mascota'] = forms.ModelChoiceField(
+                queryset=Mascota.objects.all(),
+                initial=self.instance.mascota,
+                widget=forms.HiddenInput(),
+                required=False
+            )
+
+
+class MensajeContactoForm(forms.ModelForm):
+    class Meta:
+        model = MensajeContacto
+        fields = ['mensaje', 'padre']
+        widgets = {
+            'mensaje': forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 4,
+            'placeholder': 'Escribí tu mensaje...'
+            }),
+            'padre': forms.HiddenInput()
+        }

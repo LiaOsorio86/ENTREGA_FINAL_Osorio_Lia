@@ -2,53 +2,81 @@
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/voluntarios.css' %}">
+
 <section class="contact_section layout_padding">
   <div class="container">
-    <div class="heading_container">
-      <h2 class="">
-        {% if form.instance.pk %}
-          Editar Usuario
-        {% else %}
-          Usuarios - Registrate
-        {% endif %}
-        <hr>
-      </h2>
+
+    <!-- Título centrado -->
+    <div class="heading_container text-center mb-4">
+      <p class="lead-intro"> Los finales felices comienzan con un usuario registrado 🐶🐱</p>
+      <h2>Registrate aqui</h2>
+      <hr>
     </div>
-  </div>
 
-  <div class="container">
-    <div class="row">
+    <!-- Formulario como card alineado a la izquierda -->
+    <div class="row justify-content-start">
       <div class="col-md-6">
-        <form method="post" enctype="multipart/form-data" class="contact_form">
+        <form method="post" enctype="multipart/form-data"
+              class="p-4 rounded-4 shadow-sm bg-white">
           {% csrf_token %}
-          {{ form.as_p }}
 
-          {% if form.non_field_errors %}
-            <div class="alert alert-danger">
-              {{ form.non_field_errors }}
-            </div>
-          {% endif %}
+          <!-- Avatar con imagen por defecto -->
+          <div class="d-flex align-items-center mb-4 gap-3">
+            <img id="avatar-preview"
+                 src="{% static 'images/default_avatar.png' %}"
+                 alt="Avatar"
+                 class="rounded-circle"
+                 style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ccc;">
 
-          <div class="btn-box mt-3">
-            <button type="submit">
-              {% if form.instance.pk %}
-                Guardar Cambios
-              {% else %}
-                Registrarse
-              {% endif %}
+            <label class="btn-custom btn-secondary-custom" style="margin-left: 1.25rem;">
+              Subir foto
+              <input type="file" name="avatar" id="id_avatar" accept="image/*" hidden>
+            </label>
+          </div>
+
+          <!-- Campos del formulario -->
+          <div style="font-size: 0.9rem;">
+            <p>{{ form.username.label_tag }} {{ form.username }}</p>
+            <p>{{ form.first_name.label_tag }} {{ form.first_name }}</p>
+            <p>{{ form.last_name.label_tag }} {{ form.last_name }}</p>
+            <p>{{ form.email.label_tag }} {{ form.email }}</p>
+            <p>{{ form.edad.label_tag }} {{ form.edad }}</p>
+            <p>{{ form.telefono.label_tag }} {{ form.telefono }}</p>
+
+            <!-- Contraseña y confirmación -->
+            <p>{{ form.password1.label_tag }} {{ form.password1 }}</p>
+            <p>{{ form.password2.label_tag }} {{ form.password2 }}</p>
+          </div>
+
+          <!-- Botón registrar -->
+          <div class="mt-4 d-flex">
+            <button type="submit" class="btn-custom w-100">
+              Registrarse
             </button>
           </div>
+
         </form>
       </div>
-      <div class="col-md-6">
-        <div class="map_container">
-          <div class="map">
-            <div id="googleMap"></div>
-          </div>
-        </div>
-      </div>
     </div>
+
   </div>
 </section>
-{% endblock %}
 
+<!-- JS para previsualizar el avatar -->
+<script>
+  const fileInput = document.getElementById('id_avatar');
+  const previewImg = document.getElementById('avatar-preview');
+
+  fileInput.addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        previewImg.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+{% endblock %}

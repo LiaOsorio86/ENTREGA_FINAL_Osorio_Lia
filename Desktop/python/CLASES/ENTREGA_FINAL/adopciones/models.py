@@ -1,6 +1,8 @@
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+
+from ENTREGA_FINAL_PROYECTO import settings
 # Create your models here.
 
 
@@ -56,6 +58,21 @@ class CasoAdoptado(models.Model):
     fecha_adopcion = models.DateField()
     adoptante_nombre = models.CharField(max_length=100, blank=True, null=True)
     comentarios = models.TextField(blank=True, null=True)
+    activo = models.BooleanField(default=True)  # para hacer reverse en la adopcion y volver a publicar
     
     def __str__(self):
         return f"Adopción de {self.mascota.nombre} el {self.fecha_adopcion}"
+
+from django.contrib.auth.models import User
+
+class MensajeContacto(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    nombre = models.CharField(max_length=100)
+    email = models.EmailField()
+    mensaje = models.TextField()
+    fecha_envio = models.DateTimeField(auto_now_add=True)
+
+    padre = models.ForeignKey('self', null=True, blank=True, related_name='respuestas', on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"{self.nombre}: {self.mensaje[:30]}"

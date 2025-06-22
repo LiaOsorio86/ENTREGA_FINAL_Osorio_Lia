@@ -2,31 +2,80 @@
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/voluntarios.css' %}">
+
 <section class="contact_section layout_padding">
   <div class="container">
-    <div class="heading_container">
+
+    <!-- Título centrado -->
+    <div class="heading_container text-center mb-4">
       <h2>Editar Perfil</h2>
       <hr>
     </div>
 
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <div style="font-size: 0.9rem;">
-        {{ form.as_p }}
+    <!-- Formulario como card alineado a la izquierda -->
+    <div class="row justify-content-start">
+      <div class="col-md-6">
+        <form method="post" enctype="multipart/form-data"
+              class="p-4 rounded-4 shadow-sm bg-white">
+          {% csrf_token %}
+
+          <!-- Avatar alineado a la izquierda con margen -->
+          <div class="d-flex align-items-center mb-4 gap-3">
+            <img id="avatar-preview"
+                 src="{% if user.avatar %}{{ user.avatar.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}"
+                 alt="Avatar"
+                 class="rounded-circle"
+                 style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ccc;">
+
+            <label class="btn-custom btn-secondary-custom" style="margin-left: 1.25rem;">
+              Cambiar avatar
+              <input type="file" name="avatar" id="id_avatar" accept="image/*" hidden>
+            </label>
+          </div>
+
+          <!-- Campos del formulario -->
+          <div style="font-size: 0.9rem;">
+            <p>{{ form.username.label_tag }} {{ form.username }}</p>
+            <p>{{ form.first_name.label_tag }} {{ form.first_name }}</p>
+            <p>{{ form.last_name.label_tag }} {{ form.last_name }}</p>
+            <p>{{ form.email.label_tag }} {{ form.email }}</p>
+            <p>{{ form.edad.label_tag }} {{ form.edad }}</p>
+            <p>{{ form.telefono.label_tag }} {{ form.telefono }}</p>
+          </div>
+
+          <!-- Botones -->
+          <div class="mt-4 d-flex gap-2">
+            <a href="{% url 'cambiar_password' %}"
+               class="btn-custom btn-secondary-custom">
+              Cambiar contraseña
+            </a>
+            <button type="submit"
+                    class="btn-custom" style="margin-left: 1.25rem;">
+              Guardar Cambios
+            </button>
+          </div>
+        </form>
       </div>
-      <div class="btn-box mt-2">
-        <a href="{% url 'cambiar_password' %}" 
-           class="btn btn-secondary btn-sm me-2" 
-           style="padding: 0.25rem 0.5rem; font-size: 0.85rem;">
-          Cambiar contraseña
-        </a>
-        <button type="submit" 
-                class="btn btn-primary btn-sm" 
-                style="padding: 0.25rem 0.5rem; font-size: 0.85rem;">
-          Guardar Cambios
-        </button>
-      </div>
-    </form>
+    </div>
+
   </div>
 </section>
+
+<!-- JS para previsualizar el avatar -->
+<script>
+  const fileInput = document.getElementById('id_avatar');
+  const previewImg = document.getElementById('avatar-preview');
+
+  fileInput.addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        previewImg.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
 {% endblock %}

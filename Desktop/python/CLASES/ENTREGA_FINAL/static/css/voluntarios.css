@@ -1,0 +1,314 @@
+/* Estilo del ícono hamburguesa */
+.navbar-toggler-icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  background-color: #333;
+  mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><path stroke="white" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"/></svg>') no-repeat center;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><path stroke="white" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"/></svg>') no-repeat center;
+  background-size: 100% 100%;
+}
+
+/* Para evitar que los ítems de la navbar se desborden fuera de pantalla */
+.navbar-nav {
+  flex-wrap: nowrap !important; /* evita que los elementos bajen a una nueva línea */
+  overflow-x: auto !important;  /* permite scroll horizontal si no entran */
+}
+
+.custom_nav-container .navbar-nav {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  white-space: nowrap !important;
+}
+
+/* Reducir tamaño del texto y espaciado en la navbar */
+.custom_nav-container .nav-link {
+  font-size: 14px !important;
+  padding: 6px 10px !important;
+}
+
+.navbar {
+    min-height: 60px;
+  }
+
+  .navbar-brand span {
+    font-size: 20px;
+    margin-left: 5px;
+  }
+  .navbar-brand img {
+    height: 40px;
+    width: auto;
+  }
+
+  .navbar-nav .nav-item {
+    margin-left: 5px;
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar .nav-link,
+  .navbar .btn-link {
+    font-size: 14px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap; /* evita que se rompa el texto */
+  }
+
+  .navbar .btn-link:hover {
+    text-decoration: none;
+  }
+
+  .navbar img.avatar-img {
+    height: 36px;
+    width: 36px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+
+body {
+  overflow-x: hidden;
+}
+
+  form.logout-form {
+    margin: 0;
+  }
+
+/* Para alinear y separar el botón de logout */
+.logout-form {
+  margin: 0 5px;
+  display: flex;
+  align-items: center;
+}
+
+.logout-form .btn-link {
+  padding: 6px 8px;
+  margin-left: 5px;
+}
+
+/* voluntarios.css */
+
+.voluntarios-section {
+  padding: 3rem 0;
+  background-color: #f9f9f9;
+}
+
+.heading_container {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.heading_container h2 {
+  font-weight: 400;
+  font-size: 1.25rem !important; /* o 1.25rem para aún más chico */
+  color: #212529;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.lead-intro {
+  text-align: center;
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.card {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border: none;
+        border-radius: 1rem;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+    }
+
+    .card-img-top {
+        object-fit: cover;
+        height: 220px;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+    }
+
+    .card-body {
+        font-size: 0.95rem;
+        flex-grow: 1;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 0.75rem;
+        text-align: center;
+    }
+
+    .card-text strong {
+        font-weight: 600;
+    }
+
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.4em 0.6em;
+        border-radius: 0.5rem;
+    }
+
+
+    .card-footer {
+        background-color: #f8f9fa;
+        border-top: none;
+        font-size: 0.85rem;
+        color: #6c757d;
+        border-bottom-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+    }
+
+    .card .btn-success.w-100 {
+        margin-top: 0.5rem;
+    }
+
+.input-file-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.input-file-wrapper input[type="file"] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.input-file-btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.input-file-btn:hover {
+  background-color: #0056b3;
+}
+
+.input-file-btn input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  z-index: 10;
+}
+
+
+.btn-custom {
+  padding: 0.25rem 0.6rem !important;
+  font-size: 0.85rem !important;
+  line-height: 2 !important;
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  border: none !important;
+  background-color: #335f31 !important;
+  color: white !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.btn-custom:hover {
+  background-color: #0d1a0e !important;
+}
+
+.btn-secondary-custom {
+  padding: 0.25rem 0.6rem !important;
+  font-size: 0.85rem !important;
+  line-height: 2 !important;
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  border: 1px solid #6c757d !important;
+  background-color: white !important;
+  color: #6c757d !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.btn-secondary-custom:hover {
+  background-color: #f3f3f3 !important;
+}
+
+/* Contenedor de mensajes flash (login, logout, etc.) */
+.message-container {
+  margin-top: 0; /* Elimina cualquier margen superior para que quede pegado al borde de la ventana */
+  width: 100%; /* Ocupa todo el ancho disponible */
+  /* z-index: 1050; /* Asegura que se muestre por encima de otros elementos */
+  pointer-events: none; /* Hace que no interfiera con clics si está vacío */
+}
+
+/* Estilo base para todas las alertas */
+.message-container .alert {
+  width: 100%;
+  margin: 0;
+  padding: 1rem 2rem;
+  text-align: left;
+  font-weight: 500;
+  border-radius: 0;
+  pointer-events: auto;
+  transition: opacity 0.5s ease;
+  animation: fadeIn 0.5s ease-out;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0; /* Comienza invisible */
+    transform: translateY(-10px); /* Ligeramente más arriba al iniciar */
+  }
+  to {
+    opacity: 1; /* Termina completamente visible */
+    transform: translateY(0); /* Termina en su posición normal */
+  }
+}
+
+/* ✅ Verde para mensajes de éxito */
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* ❌ Rojo para mensajes de error */
+.alert-error,
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+
+/* 🟡 Amarillo para advertencias */
+.alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
+
+/* 🔵 Azul claro para información */
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}

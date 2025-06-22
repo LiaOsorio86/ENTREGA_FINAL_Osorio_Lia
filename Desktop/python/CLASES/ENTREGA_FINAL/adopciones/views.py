@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
-from adopciones.models import Publicacion, RegistroVoluntarios, UsuarioPersonalizado
-from adopciones.formularios import RegistroUsuarioForm, RegistroVoluntariosForm, MascotaForm, EditarUsuarioForm, PublicacionForm
+from django.urls import reverse
+from adopciones.models import Publicacion, RegistroVoluntarios, UsuarioPersonalizado, MensajeContacto, Mascota, CasoAdoptado
+from adopciones.formularios import RegistroUsuarioForm, RegistroVoluntariosForm, MascotaForm, EditarUsuarioForm, PublicacionForm, MensajeContactoForm, CasoAdoptadoForm
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -16,16 +17,23 @@ from django.http import HttpResponseForbidden
 from ENTREGA_FINAL_PROYECTO import settings
 
 from django.views.generic.edit import CreateView
-from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from .models import Mascota, CasoAdoptado
-from .formularios import CasoAdoptadoForm
 from datetime import date
 
 from django.views.generic import ListView
-from .models import CasoAdoptado
 
-from django.db.models import Q
+from .models import MensajeContacto
+from django.core.paginator import Paginator
+
+from django.shortcuts import redirect
+from django.urls import reverse
+
+from django.core.paginator import Paginator
+from django.urls import reverse
+from django.shortcuts import render, redirect
+from .models import MensajeContacto
+from .formularios import MensajeContactoForm
+
 
 # Create your views here.
 
@@ -37,9 +45,6 @@ def gallery(request):
 
 def index(request):
     return render(request, 'adopciones/index.html')
-
-def contact(request):
-    return render(request, 'adopciones/contact.html')
 
 def about (request):
     return render(request, 'adopciones/about.html')
@@ -74,12 +79,9 @@ def editar_perfil(request):
     return render(request, 'adopciones/editar_perfil.html', {'form': form})
 
     
-
-
 @login_required
 def perfil(request):
-    return render(request, 'adopciones/perfil.html', {'usuario': request.user})
-
+    return render(request, 'adopciones/index.html', {'usuario': request.user})
 
     
 def login_usuario(request):
@@ -89,14 +91,19 @@ def login_usuario(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
+            messages.success(request, f'¡Bienvenid@, {user.username or user.first_name}!')
             return redirect('index')
         else:
-            return render(request, 'adopciones/login.html', {'error': 'Credenciales inválidas'})
+            messages.error(request, 'Usuario o contraseña incorrectos.')
+            return redirect('login')  # o return render(...)
+
     return render(request, 'adopciones/login.html')
+
 
 @require_POST
 def logout_usuario(request):
     logout(request)
+    messages.success(request, "Sesión cerrada correctamente.")
     return redirect('index')
 
 
@@ -165,7 +172,7 @@ class VoluntarioUpdateView(AdminRequiredMixin, UpdateView):
     model = RegistroVoluntarios
     form_class = RegistroVoluntariosForm
     template_name = 'adopciones/registro_voluntarios/formulario.html'
-    success_url = reverse_lazy('voluntarios_lista')
+    success_url = reverse_lazy('index')
 
 class VoluntarioDeleteView(AdminRequiredMixin, DeleteView):
     model = RegistroVoluntarios
@@ -176,13 +183,13 @@ class UsuarioCreateView(CreateView):
     model = UsuarioPersonalizado
     form_class = RegistroUsuarioForm
     template_name = 'adopciones/registro_usuario.html'
-    success_url = reverse_lazy('usuarios_lista')
+    success_url = reverse_lazy('login')
 
 class UsuarioUpdateView(SoloAdminMixin, UpdateView):
     model = UsuarioPersonalizado
     form_class = RegistroUsuarioForm
     template_name = 'adopciones/registro_usuario.html'
-    success_url = reverse_lazy('usuarios_lista')
+    success_url = reverse_lazy('index')
 
 class CambiarPasswordView(PasswordChangeView):
     login_url = settings.LOGIN_URL  # ver porque django rompe y manda a pagina predeterminada, pongo para que tome la url del settings.py 
@@ -233,4 +240,103 @@ class ListaAdoptadosView(ListView):
     model = CasoAdoptado
     template_name = 'adopciones/lista_adoptados.html'
     context_object_name = 'casos'
+
+class EliminarAdoptadoView(UserPassesTestMixin, DeleteView):
+    model = CasoAdoptado
+    template_name = 'adopciones/eliminar_adoptado.html'
+    success_url = reverse_lazy('lista_adoptados')
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+
+class EditarAdoptadoView(UserPassesTestMixin, UpdateView):
+    model = CasoAdoptado
+    form_class = CasoAdoptadoForm
+    template_name = 'adopciones/editar_adoptado.html'
+    success_url = reverse_lazy('lista_adoptados')
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.method == 'POST':
+            context['mascota_form'] = MascotaForm(self.request.POST, self.request.FILES, instance=self.object.mascota)
+        else:
+            context['mascota_form'] = MascotaForm(instance=self.object.mascota)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        mascota_form = context['mascota_form']
+        
+        if mascota_form.is_valid():
+            self.object = form.save(commit=False)
+            mascota = mascota_form.save()
+
+            # Si el caso se desactiva, devolvemos la mascota a adopción
+            if not self.object.activo:
+                mascota.adoptada = False
+                mascota.save()
+
+                # Creamos una nueva publicación
+                Publicacion.objects.create(
+                    titulo_publicacion=f"{mascota.nombre}",
+                    contenido_publicacion=mascota.descripcion,
+                    mascota_publicacion=mascota
+                )
+
+                self.object.delete()
+                messages.success(self.request, f"{mascota.nombre} volvió a estar en adopción y se publicó correctamente.")
+                return redirect('publicaciones')
+
+            # Si el caso sigue activo, simplemente guardamos
+            self.object.save()
+            return super().form_valid(form)
+        
+        return self.form_invalid(form)
+
+    def form_invalid(self, form):
+            print(">>> form_invalid")
+            print(form.errors)
+            return super().form_invalid(form)
+
+
+def contacto(request):
+    mensajes_list = MensajeContacto.objects.filter(padre__isnull=True).order_by('-fecha_envio')
+    paginator = Paginator(mensajes_list, 10)
+    page_number = request.GET.get('page')
+    mensajes = paginator.get_page(page_number)
+
+    if request.method == 'POST':
+        form = MensajeContactoForm(request.POST)
+        if form.is_valid():
+            mensaje = form.save(commit=False)
+            if request.user.is_authenticated:
+                mensaje.usuario = request.user
+                mensaje.nombre = request.user.username
+                mensaje.save()
+
+                if mensaje.padre:
+                    # Calcular en qué página está el padre
+                    padre_id = mensaje.padre.id
+                    padre_index = list(mensajes_list).index(mensaje.padre)
+                    padre_pagina = padre_index // paginator.per_page + 1
+
+                    return redirect(f"{reverse('contact')}?page={padre_pagina}&scroll_to=mensaje-{padre_id}")
+                else:
+                    return redirect(f"{reverse('contact')}#blog")
+
+            else:
+                messages.error(request, "Debes iniciar sesión para enviar un mensaje.")
+        else:
+            messages.error(request, "Ha ocurrido un error - intenta nuevamente.")
+    else:
+        form = MensajeContactoForm()
+
+    return render(request, 'adopciones/contact.html', {
+        'form': form,
+        'mensajes': mensajes,
+    })
 

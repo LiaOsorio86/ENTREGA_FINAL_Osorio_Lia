@@ -1,5 +1,6 @@
 {% load static %}
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,92 +32,59 @@
   <link href="{% static 'css/style.css' %}" rel="stylesheet" />
   <!-- responsive style -->
   <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/voluntarios.css' %}" rel="stylesheet" />
 
 <style>
-  .navbar {
-    min-height: 60px;
-  }
-
-  .navbar-nav {
-    display: flex;
-    align-items: center;
-  }
-
-  .navbar-nav .nav-item {
-    margin-left: 5px;
-    margin-right: 5px;
-    display: flex;
-    align-items: center;
-  }
-
-  .navbar .nav-link,
-  .navbar .btn-link {
-    font-size: 13px;
-    padding: 6px 8px;
-    display: flex;
-    align-items: center;
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .navbar .btn-link:hover {
-    text-decoration: none;
-  }
-
-  .navbar img.avatar-img {
-    height: 36px;
-    width: 36px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-right: 5px;
-  }
-
-  form.logout-form {
-    margin: 0;
-  }
-
-/* Para alinear y separar el botón de logout */
-.logout-form {
-  margin: 0 5px;
-  display: flex;
-  align-items: center;
-}
-
-.logout-form .btn-link {
-  padding: 6px 8px;
-  margin-left: 5px;
-}
-
 </style>
-
-
 </head>
 
+<!-- jQuery y Bootstrap Bundle (incluye Popper) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <body>
-  {% if messages %}
-  <div>
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
+<!-- Mensajes de Django -->
+  <div class="message-container-fixed">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} auto-dismiss">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
   </div>
-{% endif %}
+
+  <!-- Script para ocultar mensajes -->
+  <script>
+    setTimeout(function () {
+      const alerts = document.querySelectorAll('.alert.auto-dismiss');
+      alerts.forEach(function (alert) {
+        alert.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        alert.style.opacity = '0';
+        alert.style.transform = 'translateY(-10px)';
+        setTimeout(() => alert.remove(), 500);
+      });
+    }, 3000);
+  </script>
+
+
+    <!-- end header section -->
   <div class="hero_area">
-    <!-- header section starts -->
+
+    <!-- header section 2 starts -->
     <header class="header_section">
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container">
           <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
-            <img src="{% static 'images/logo.png' %}" alt="" />
-            <span>
-              Patitas
-            </span>
+            <img src="{% static 'images/logo.png' %}" alt="" style="height: 40px;">
+            <span> Patitas </span>
           </a>
-
+          <!-- Botón hamburguesa (ya actualizado) -->
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
                   aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class=""> </span>
+            <span class="navbar-toggler-icon"></span>
           </button>
-
+        <!-- Menú que se colapsa -->
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav">            
               {% if user.is_authenticated %}
@@ -149,6 +117,9 @@
                 <li class="nav-item d-flex align-items-center">
                   <a class="nav-link" href="{% url 'editar_perfil' %}">Mi Usuario</a>
                 </li> 
+                <li class="nav-item d-flex align-items-center">
+                  <a class="nav-link pr-lg-0" href="{% url 'contact' %}">Blog</a>
+                </li>
                 <li class="nav-item d-flex align-items-center">
                    <form method="post" action="{% url 'logout' %}">
                       {% csrf_token %}
@@ -184,7 +155,7 @@
                   <a class="nav-link" href="{% url 'editar_perfil' %}">Mi Usuario</a>
                 </li>
                 <li class="nav-item d-flex align-items-center">
-                  <a class="nav-link pr-lg-0" href="{% url 'contact' %}">Envia tu mensaje</a>
+                  <a class="nav-link pr-lg-0" href="{% url 'contact' %}">Blog</a>
                 </li>
                 <li class="nav-item d-flex align-items-center">
                    <form method="post" action="{% url 'logout' %}">
@@ -215,7 +186,7 @@
         </nav>
       </div>
     </header>
-    <!-- end header section -->
+    <!-- end header section 2 -->
    
     {% block content %}
     
@@ -425,8 +396,6 @@
       </div>
     </div>
   </section>
-
-
 
 
   <!-- end info_section -->

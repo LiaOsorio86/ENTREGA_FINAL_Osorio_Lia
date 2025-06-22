@@ -1,0 +1,98 @@
+{% extends "adopciones/index.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Editar Caso de Adopción</h2>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow rounded-4 p-4">
+
+        <!-- BLOQUES DE ERRORES -->
+        {% if form.errors %}
+          <div class="alert alert-danger">
+            <strong>Errores en el caso adoptado:</strong>
+            <ul>
+              {% for field in form %}
+                {% for error in field.errors %}
+                  <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        {% if mascota_form.errors %}
+          <div class="alert alert-danger">
+            <strong>Errores en la mascota:</strong>
+            <ul>
+              {% for field in mascota_form %}
+                {% for error in field.errors %}
+                  <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        <!-- FIN BLOQUES DE ERRORES -->
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          
+          <h5 class="mb-3">Datos del caso</h5>
+          <div class="mb-3">
+            {{ form.fecha_adopcion.label_tag }}  
+            {{ form.fecha_adopcion }}
+          </div>
+          <div class="mb-3">
+            {{ form.adoptante_nombre.label_tag }}
+            {{ form.adoptante_nombre }}
+          </div>
+          <div class="mb-3">
+            {{ form.comentarios.label_tag }}
+            {{ form.comentarios }}
+          </div>
+          <div class="form-check mb-3">
+            {{ form.activo }}
+            {{ form.activo.label_tag }}
+          </div>
+
+          <hr class="my-4">
+
+          <h5 class="mb-3">Datos de la mascota</h5>
+          <div class="mb-3">
+            {{ mascota_form.nombre.label_tag }}
+            {{ mascota_form.nombre }}
+          </div>
+          <div class="mb-3">
+            {{ mascota_form.edad.label_tag }}
+            {{ mascota_form.edad }}
+          </div>
+          <div class="mb-3">
+            {{ mascota_form.tipo.label_tag }}
+            {{ mascota_form.tipo }}
+          </div>
+          <div class="mb-3">
+            {{ mascota_form.raza.label_tag }}
+            {{ mascota_form.raza }}
+          </div>
+          <div class="mb-3">
+            {{ mascota_form.descripcion.label_tag }}
+            {{ mascota_form.descripcion }}
+          </div>
+          <div class="mb-3">
+            {{ mascota_form.imagen.label_tag }}
+            {{ mascota_form.imagen }}
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success">Guardar cambios</button>
+            <a href="{% url 'lista_adoptados' %}" class="btn btn-secondary">Cancelar</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,46 +1,139 @@
 {% extends "adopciones/index.html" %}
 {% block content %}
-<div class="container mt-4">
-    <h2>Contactate con nuestros voluntarios</h2>
+<style>
+  .usuarios-section {
+    padding: 3rem 0;
+    background-color: #ffffff;  /* fondo blanco */
+  }
+
+  .heading_container {
+    width: 100%;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .heading_container h2 {
+    font-weight: 400;
+    font-size: 2rem;
+    color: #212529;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .heading_container hr {
+    width: 60px;
+    height: 3px;
+    background-color: #198754;
+    border: none;
+    margin: 0 auto 1.5rem;
+    border-radius: 2px;
+  }
+
+  .btn-success {
+    background-color: #198754;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.95rem;
+    border-radius: 0.5rem;
+  }
+
+  .btn-success:hover {
+    background-color: #157347;
+  }
+
+  .table {
+    background-color: white;
+    border-collapse: collapse;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .table th, .table td {
+    padding: 0.4rem 1rem; /* filas más finas */
+    border-bottom: 1px solid #dee2e6;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+  }
+
+  .table tbody tr:hover {
+    background-color: #f0f0f0;  /* gris suave en hover */
+    cursor: pointer;
+  }
+
+  .table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .empty-message {
+    text-align: center;
+    color: #6c757d;
+    font-size: 1rem;
+    font-style: italic;
+    padding: 1rem 0;
+  }
+</style>
+
+<section class="usuarios-section">
+  <div class="container">
+    <div class="heading_container">
+      <p class="lead-intro">¿Tenés dudas?... 🤔</p>
+      <h2>Contactate con nuestros voluntarios</h2>
+    </div>
 
     {% if user.is_superuser %}
-        <a href="{% url 'voluntario_crear' %}" class="btn btn-success mb-3">Agregar Nuevo Voluntario</a>
+      <div class="text-center mb-4">
+        <a href="{% url 'voluntario_crear' %}" class="btn btn-success">Agregar Nuevo Voluntario</a>
+      </div>
     {% endif %}
 
-    <table class="table table-striped">
+    <div class="table-container">
+      <table class="table">  <!-- quité "table-striped" para no tener filas grises -->
         <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Zona</th>
-                <th>Edad</th>
-                <th>Teléfono</th>
-                <th>Email</th>
-            </tr>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Zona</th>
+            <th>Edad</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            {% if user.is_superuser %}
+            <th>Acciones</th>
+            {% endif %}
+          </tr>
         </thead>
         <tbody>
-            {% for voluntario in voluntarios %}
-            <tr>
-                <td>{{ voluntario.nombre }}</td>
-                <td>{{ voluntario.apellido }}</td>
-                <td>{{ voluntario.zona }}</td>
-                <td>{{ voluntario.edad }}</td>
-                <td>{{ voluntario.telefono }}</td>
-                <td>{{ voluntario.email }}</td>
-                <td>
-                    {% if user.is_superuser %}
-                        <a href="{% url 'voluntario_editar' voluntario.pk %}" class="btn btn-primary btn-sm">Editar</a>
-                        <a href="{% url 'voluntario_eliminar' voluntario.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="7" class="text-center">No hay voluntarios registrados.</td>
-            </tr>
-            {% endfor %}
+          {% for voluntario in voluntarios %}
+          <tr>
+            <td>{{ voluntario.nombre }}</td>
+            <td>{{ voluntario.apellido }}</td>
+            <td>{{ voluntario.zona }}</td>
+            <td>{{ voluntario.edad }}</td>
+            <td>{{ voluntario.telefono }}</td>
+            <td>{{ voluntario.email }}</td>
+            {% if user.is_superuser %}
+            <td>
+              <a href="{% url 'voluntario_editar' voluntario.pk %}" class="btn btn-primary btn-sm">Editar</a>
+              <a href="{% url 'voluntario_eliminar' voluntario.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+            {% endif %}
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="empty-message">🙁 No hay voluntarios registrados aún.</td>
+          </tr>
+          {% endfor %}
         </tbody>
-    </table>
-</div>
+      </table>
+    </div>
+  </div>
+</section>
 {% endblock %}
-

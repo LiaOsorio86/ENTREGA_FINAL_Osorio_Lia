@@ -1,4 +1,5 @@
 from django.urls import path
+from django.conf import settings
 from . import views
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView
@@ -6,7 +7,7 @@ from django.contrib.auth.views import LoginView
 urlpatterns = [
     path('', views.index, name='index'), 
     path('adopciones/gallery/', views.gallery, name='gallery'), 
-    path('adopciones/contact/', views.contact, name='contact'),
+    path('adopciones/contact/', views.contacto, name='contact'),
     path('adopciones/about/', views.about, name='about'),
     path('adopciones/registrar_mascota/', views.registrar_mascota, name='registrar_mascota'), # mascotas en adopcion
     path('adopciones/publicaciones/', views.publicaciones, name='publicaciones'),
@@ -34,5 +35,8 @@ urlpatterns = [
     path('cambiar-password/', views.CambiarPasswordView.as_view(), name='cambiar_password'), # Views para cambiar contraseña
     path('adoptar/<int:mascota_id>/', views.RegistrarAdopcionView.as_view(), name='registrar_adopcion'),
     path('adopciones/lista_adoptados', views.ListaAdoptadosView.as_view(), name='lista_adoptados'),
+    path('adoptados/eliminar/<int:pk>/', views.EliminarAdoptadoView.as_view(), name='eliminar_adoptado'),
+    path('adoptados/editar/<int:pk>/', views.EditarAdoptadoView.as_view(), name='editar_adoptado'),
 
-    ]
+
+    ] 

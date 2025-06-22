@@ -134,3 +134,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 LOGIN_URL = '/adopciones/login/' 
 LOGIN_REDIRECT_URL = '/adopciones/index/'
 
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
